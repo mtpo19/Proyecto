@@ -1,0 +1,248 @@
+import csv
+
+def leer_archivo(ruta_archivo):
+  with open(ruta_archivo, 'r', encoding='utf-8') as archivo:
+    lector = csv.reader(archivo)
+    filas = list(lector)
+  return filas
+
+def limpiar_datos_lista(datos):
+  """
+  Limpia y transforma los datos de una lista de listas (lectura de CSV).
+
+  Args:
+    datos: Lista de listas que contienen los datos del archivo CSV.
+
+  Returns:
+    Lista de diccionarios con los datos limpios.
+  """
+  if len(datos) == 0:
+    raise ValueError("La lista de datos está vacía.")
+
+  datos_limpios = []
+  for fila in datos:
+    # Check if the fila list has at least two elements
+    if len(fila) >= 2:
+      # Reemplazar valores vacíos o no deseados por valores apropiados
+      # Convertir valores numéricos a tipo numérico
+      # Aplicar otras transformaciones de limpieza según sea necesario
+
+# Ejemplo de limpieza simple
+try:
+  fila_limpia = {
+      'ESTU_TIPODOCUMENTO': fila[0] if len(fila) >= 1 else None,
+      'ESTU_NACIONALIDAD': fila[1] if len(fila) >= 2 else None,
+  }
+except IndexError:
+  # Handle the case where the list is too short
+  pass
+          ...
+        except IndexError:
+            pass
+        # Manejar el caso en el que la fila no tenga suficientes elementos
+        print("Fila incompleta:", fila)
+          'ESTU_GENERO': fila[2],
+          'ESTU_TIENEETNIA': fila[3],
+          'ESTU_ETNIA': fila[4],
+          'ESTU_PAIS_RESIDE': fila[5],
+          'ESTU_DEPTO_RESIDE': fila[6],
+          'ESTU_MCPIO_RESIDE': fila[7],
+          'FAMI_ESTRATOVIVIENDA': fila[8],
+          'FAMI_TIENECOMPUTADOR': fila[9],
+          'FAMI_TIENEAUTOMOVIL': fila[10],
+          'FAMI_TIENEMOTOCICLETA': fila[11],
+          'COLE_NATURALEZA': fila[12],
+          'COLE_AREA_UBICACION': fila[13],
+          'PUNT_LECTURA_CRITICA': fila[14],
+          'PERCENTIL_LECTURA_CRITICA': fila[15],
+          'DESEMP_LECTURA_CRITICA': fila[16],
+          'PUNT_MATEMATICAS': fila[17],
+          'PERCENTIL_MATEMATICAS': fila[18],
+          'DESEMP_MATEMATICAS': fila[19],
+          'PUNT_C_NATURALES': fila[20],
+          'PERCENTIL_C_NATURALES': fila[21],
+          'DESEMP_C_NATURALES': fila[22],
+          'PUNT_SOCIALES_CIUDADANAS': fila[23],
+          'PERCENTIL_SOCIALES_CIUDADANAS': fila[24],
+          'DESEMP_SOCIALES_CIUDADANAS': fila[25],
+          'PUNT_INGLES': fila[26],
+          'PERCENTIL_INGLES': fila[27],
+          'DESEMP_INGLES': fila[28],
+          'PUNT_GLOBAL': fila[29],
+          'PERCENTIL_GLOBAL': fila[30],
+          'ESTU_GENERACION-E': fila[31],
+       
+      
+def limpiar_datos(datos):
+    datos_limpios = []
+    for fila in datos:
+        fila_limpia = {}
+        for key, value in fila.items():
+            if key == 'PUNT_GLOBAL':
+                value = float(value)  # Convertir a tipo float
+            fila_limpia[key] = value
+        datos_limpios.append(fila_limpia)
+    return datos_limpios
+def limpiar_datos_diccionario(datos):
+  datos_por_departamento = {}
+  for fila in datos:
+    # Extraer el departamento de residencia
+    departamento = fila[6]
+
+    # Si el departamento no existe en el diccionario, crearlo
+    if departamento not in datos_por_departamento:
+      datos_por_departamento[departamento] = {}
+
+    # Limpiar y agregar los datos del estudiante al diccionario anidado
+    # (similar a la función `limpiar_datos_lista`)
+
+    # Ejemplo de limpieza simple
+    datos_estudiante = {
+      'ESTU_TIPODOCUMENTO': fila[0],
+      'ESTU_NACIONALIDAD': fila[1],
+      # ... (continuar con las demás columnas)
+      'PUNT_GLOBAL': float(fila[-1])  # Convertir a tipo float
+    }
+    datos_por_departamento[departamento][fila[0]] = datos_estudiante
+
+  return datos_por_departamento
+
+def calcular_total_general_lista(datos_limpios):
+  total_general = 0
+  for dato in datos_limpios:
+    puntaje_global = dato['PUNT_GLOBAL']
+    total_general += puntaje_global
+  return total_general
+def calcular_total_general_diccionario(datos_por_departamento):
+  total_general = 0
+  for departamento, datos_estudiantes in datos_por_departamento.items():
+    for estudiante in datos_estudiantes.values():
+      puntaje_global = estudiante['PUNT_GLOBAL']
+      total_general += puntaje_global
+  return total_general
+def calcular_total_condicionado_lista(datos_limpios, condicion):
+  total_condicionado = 0
+  for dato in datos_limpios:
+    if condicion(dato):
+      puntaje_global = dato['PUNT_GLOBAL']
+      total_condicionado += puntaje_global
+  return total_condicionado
+def calcular_total_condicionado_diccionario(datos_por_departamento, condicion):
+  total_condicionado = 0
+  for departamento, datos_estudiantes in datos_por_departamento.items():
+    for estudiante, datos_estudiante in datos_estudiantes.items():
+      if condicion(datos_estudiante):
+        puntaje_global = datos_estudiante['PUNT_GLOBAL']
+        total_condicionado += puntaje_global
+  return total_condicionado
+import numpy as np
+
+def extraer_columna_vector_lista(datos_limpios, nombre_columna):
+  valores_columna = []
+  for dato in datos_limpios:
+    valor = dato[nombre_columna]
+    # Convertir a tipo numérico si es necesario
+    valor_numerico = float(valor)
+    valores_columna.append(valor_numerico)
+  return np.array(valores_columna)
+def calcular_total_general_vector(vector_datos):
+  return vector_datos.sum()
+def calcular_total_condicionado_vector(vector_datos, condicion):
+  valores_filtrados = vector_datos[condicion(vector_datos)]
+  return valores_filtrados.sum()
+import numpy as np
+
+def ordenar_por_puntaje_global(datos_limpios):
+  datos_ordenados = sorted(datos_limpios, key=lambda dato: dato['PUNT_GLOBAL'], reverse=True)
+  return datos_ordenados
+def ordenar_por_puntaje_materia(datos_limpios, nombre_materia):
+  columna_puntaje = f"PUNT_{nombre_materia.upper()}"  # Convertir a mayúsculas
+  datos_ordenados = sorted(datos_limpios, key=lambda dato: dato[columna_puntaje], reverse=True)
+  return datos_ordenados
+def buscar_binaria(datos_limpios, valor_buscado, columna, columna_ordenamiento):
+  # Ordenar la lista de datos por la columna de ordenamiento
+  datos_ordenados = sorted(datos_limpios, key=lambda dato: dato[columna_ordenamiento])
+
+  # Establecer los límites inicial y final de la búsqueda
+  izquierda = 0
+  derecha = len(datos_ordenados) - 1
+
+  # Búsqueda binaria recursiva
+  def buscar_recursivo(izquierda, derecha):
+    if izquierda > derecha:
+      return -1
+
+    # Calcular el índice medio
+    medio = (izquierda + derecha) // 2
+
+    # Obtener el valor del estudiante en el índice medio
+    valor_medio = datos_ordenados[medio][columna]
+
+    # Comparar el valor buscado con el valor medio
+    if valor_buscado == valor_medio:
+      return medio
+    elif valor_buscado < valor_medio:
+      return buscar_recursivo(izquierda, medio - 1)
+    else:
+      return buscar_recursivo(medio + 1, derecha)
+
+  # Iniciar la búsqueda recursiva
+  indice_encontrado = buscar_recursivo(izquierda, derecha)
+
+  return indice_encontrado
+def buscar_secuencial(datos_limpios, valor_buscado, columna):
+  for i, dato in enumerate(datos_limpios):
+    valor_actual = dato[columna]
+    if valor_actual == valor_buscado:
+      return i
+  return -1
+
+
+#main
+datos = leer_archivo('ICFES Scores 2019.csv')
+print(datos[0])  # Muestra la primera fila del archivo
+datos_limpios = limpiar_datos_lista(datos)
+print(datos_limpios[0])  # Muestra el primer diccionario de datos limpio
+datos_por_departamento = limpiar_datos_diccionario(datos)
+print(datos_por_departamento['ANTIOQUIA'])  # Muestra los datos de los estudiantes de Antioquia
+total_general = calcular_total_general_lista(datos_limpios)
+print("Total general de puntajes ICFES:", total_general)
+total_general = calcular_total_general_diccionario(datos_por_departamento)
+print("Total general de puntajes ICFES:", total_general)
+def condicion_genero_masculino(dato):
+  return dato['ESTU_GENERO'] == 'M'
+total_masculino = calcular_total_condicionado_lista(datos_limpios, condicion_genero_masculino)
+print("Total puntajes ICFES - Hombres:", total_masculino)
+def condicion_puntaje_mayor_700(datos_estudiante):
+  return datos_estudiante['PUNT_GLOBAL'] > 700
+
+total_alto_puntaje = calcular_total_condicionado_diccionario(datos_por_departamento, condicion_puntaje_mayor_700)
+print("Total puntajes ICFES > 700:", total_alto_puntaje)
+puntajes_lectura = extraer_columna_vector_lista(datos_limpios, 'PUNT_LECTURA_CRITICA')
+print("Puntajes lectura:", puntajes_lectura)
+total_general = calcular_total_general_vector(puntajes_lectura)
+print("Total general puntajes lectura:", total_general)
+def condicion_puntaje_mayor_800(valor):
+  return valor > 800
+
+total_alto_puntaje = calcular_total_condicionado_vector(puntajes_lectura, condicion_puntaje_mayor_800)
+print("Total puntajes lectura > 800:", total_alto_puntaje)
+datos_ordenados = ordenar_por_puntaje_global(datos_limpios)
+print("Estudiantes ordenados por puntaje global (mayor a menor):")
+for i, dato in enumerate(datos_ordenados):
+  print(f"{i+1}. {dato['ESTU_TIPODOCUMENTO']}: {dato['PUNT_GLOBAL']}")
+datos_ordenados_lectura = ordenar_por_puntaje_materia(datos_limpios, 'lectura critica')
+print("Estudiantes ordenados por puntaje lectura crítica (mayor a menor):")
+for i, dato in enumerate(datos_ordenados_lectura):
+  print(f"{i+1}. {dato['ESTU_TIPODOCUMENTO']}: {dato[columna_puntaje]}")
+indice_estudiante = buscar_binaria(datos_limpios, 750, 'PUNT_GLOBAL', 'ESTU_DEPTO_RESIDE')
+if indice_estudiante != -1:
+  print(f"Estudiante con puntaje global 750 encontrado en el índice: {indice_estudiante}")
+else:
+  print("Estudiante con puntaje global 750 no encontrado.")
+indice_estudiante = buscar_secuencial(datos_limpios, 750, 'PUNT_GLOBAL')
+if indice_estudiante != -1:
+  print(f"Estudiante con puntaje global 750 encontrado en el índice: {indice_estudiante}")
+else:
+  print("Estudiante con puntaje global 750 no encontrado.")
+
